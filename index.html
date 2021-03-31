@@ -12,12 +12,31 @@
     />
   </head>
   <body>
-    <label for="scale" class="btn"> Choose Pixel Scale </label>
-    <input type="number" id="scale" value="1" />
-    <label for="file-upload" class="custom-file-upload btn">
-      Choose Image File
-    </label>
-    <input type="file" id="file-upload" />
-    <div id="output"></div>
+    <div id="left">
+      <div id="title">Box Shadow Converter</div>
+      <div class="upload-cont">
+        <label for="file-upload" class="custom-file-upload btn">
+          Choose Image File
+        </label>
+        <input type="file" id="file-upload" />
+        <p id="filename"></p>
+      </div>
+      <label for="scale" class="btn">Pixel Scale:</label>
+      <input type="number" id="scale" min="1" value="1" />
+      <br />
+      <p id="width">width: 1px;</p>
+      <p id="height">height: 1px;</p>
+      <textarea id="output">box-shadow: ;</textarea>
+      <div id="icons">
+        <div id="copy" class="clickable">
+          <span class="icon"></span>
+          <span class="tooltip">Copy to Clipboard</span>
+        </div>
+      </div>
+    </div>
+    <div id="right">
+      <label for="preview" class="preview">Preview</label>
+      <div id="preview"></div>
+    </div>
   </body>
 </html>

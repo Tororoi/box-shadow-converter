@@ -2,18 +2,30 @@
 let scaleInput = document.querySelector("#scale");
 let uploadBtn = document.querySelector("#file-upload");
 let outputResult = document.querySelector("#output");
+let copyBtn = document.querySelector("#copy");
+let filename = document.querySelector("#filename");
 
 scaleInput.addEventListener("change", changeScale);
+scaleInput.addEventListener("keyup", changeScale);
 uploadBtn.addEventListener("change", convertImage);
+copyBtn.addEventListener("click", copyToClipboard);
 
 let canvas = document.createElement('canvas');
 let ctx = canvas.getContext('2d');
 
-let result;
 let scale = 1;
+let data;
 
 function changeScale() {
   scale = this.value;
+  document.querySelector("#width").textContent = `width: ${scale}px;`;
+  document.querySelector("#height").textContent = `height: ${scale}px;`
+  if (data) {
+    let result = convertData();
+
+    outputResult.value = "box-shadow: " + result + ";";
+    renderPreview(result);
+  }
 }
 
 function convertImage() {
@@ -27,28 +39,36 @@ function convertImage() {
     reader.onload = (e) => {
       img.src = e.target.result;
       img.onload = () => {
-
+        canvas.width = img.width;
+        canvas.height = img.height;
         ctx.drawImage(img, 0, 0, img.width, img.height)
-        let data = ctx.getImageData(0, 0, img.width, img.height)
+        data = ctx.getImageData(0, 0, img.width, img.height)
 
-        let boxes = [];
-        for (let y = 0; y < img.height; y++) {
-          for (let x = 0; x < img.width; x++) {
-            let colorObj = getColor(x, y, img.width, data);
-            //Don't create box-shadow for transparent pixels
-            if (colorObj.a > 0) {
-              boxes.push(`${x * scale}px ${y * scale}px ${colorObj.color}`);
-            }
-          }
-        }
-        result = "box-shadow:" + boxes.join(', ') + ";";
-        outputResult.textContent = result;
+        let result = convertData();
+
+        filename.textContent = this.files[0].name;
+        outputResult.value = "box-shadow: " + result + ";";
+        renderPreview(result);
       }
     }
 
     reader.readAsDataURL(this.files[0]);
   }
   // 1) Create a canvas, either on the page or simply in code
+}
+
+function convertData() {
+  let boxes = [];
+  for (let y = 0; y < data.height; y++) {
+    for (let x = 0; x < data.width; x++) {
+      let colorObj = getColor(x, y, data.width, data);
+      //Don't create box-shadow for transparent pixels
+      if (colorObj.a > 0) {
+        boxes.push(`${x * scale}px ${y * scale}px ${colorObj.color}`);
+      }
+    }
+  }
+  return boxes.join(', ');
 }
 
 function getColor(x, y, width, colorLayer) {
@@ -62,4 +82,18 @@ function getColor(x, y, width, colorLayer) {
   canvasColor.a = colorLayer.data[startPos + 3];
   canvasColor.color = `rgba(${canvasColor.r},${canvasColor.g},${canvasColor.b},${canvasColor.a})`
   return canvasColor;
+}
+
+function renderPreview(shadow) {
+  let preview = document.getElementById("preview");
+  preview.style.width = `${scale}px`;
+  preview.style.height = `${scale}px`;
+  preview.style.boxShadow = shadow;
+}
+
+function copyToClipboard() {
+  outputResult.select();
+  outputResult.setSelectionRange(0, 99999); /* For mobile devices */
+
+  document.execCommand("copy");
 }
