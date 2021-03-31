@@ -18,13 +18,13 @@ let data;
 
 function changeScale() {
   scale = this.value;
-  document.querySelector("#width").textContent = `width: ${scale}px;`;
-  document.querySelector("#height").textContent = `height: ${scale}px;`
   if (data) {
     let result = convertData();
 
-    outputResult.value = "box-shadow: " + result + ";";
+    outputResult.value = "width: " + scale + "px;\nheight: " + scale + "px;\nbox-shadow: " + result + ";";
     renderPreview(result);
+  } else {
+    outputResult.value = "width: " + scale + "px;\nheight: " + scale + "px;\nbox-shadow: ;";
   }
 }
 
@@ -47,7 +47,7 @@ function convertImage() {
         let result = convertData();
 
         filename.textContent = this.files[0].name;
-        outputResult.value = "box-shadow: " + result + ";";
+        outputResult.value = "width: " + scale + "px;\nheight: " + scale + "px;\nbox-shadow: " + result + ";";
         renderPreview(result);
       }
     }
