@@ -39,10 +39,19 @@ function convertImage() {
     reader.onload = (e) => {
       img.src = e.target.result;
       img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0, img.width, img.height)
-        data = ctx.getImageData(0, 0, img.width, img.height)
+        //limit size of images
+        let long = img.width > img.height ? img.width : img.height;
+        if (long > 300) {
+          let ratio = 300 / long;
+          canvas.width = img.width * ratio;
+          canvas.height = img.height * ratio;
+        } else {
+          canvas.width = img.width;
+          canvas.height = img.height;
+        }
+        console.log(canvas)
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        data = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
         let result = convertData();
 
