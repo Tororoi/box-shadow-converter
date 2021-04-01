@@ -49,7 +49,6 @@ function convertImage() {
           canvas.width = img.width;
           canvas.height = img.height;
         }
-        console.log(canvas)
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
         data = ctx.getImageData(0, 0, canvas.width, canvas.height)
 
