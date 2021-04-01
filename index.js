@@ -41,8 +41,8 @@ function convertImage() {
       img.onload = () => {
         //limit size of images
         let long = img.width > img.height ? img.width : img.height;
-        if (long > 300) {
-          let ratio = 300 / long;
+        if (long > 256) {
+          let ratio = 256 / long;
           canvas.width = img.width * ratio;
           canvas.height = img.height * ratio;
         } else {
