@@ -66,6 +66,7 @@ function convertImage() {
   // 1) Create a canvas, either on the page or simply in code
 }
 
+//FIX: improve speed by storing drawn pixels in map instead of the whole image data, since transparent pixels are wasting time
 function convertData() {
   let boxes = [];
   for (let y = 0; y < data.height; y++) {
